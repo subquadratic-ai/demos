@@ -1,0 +1,82 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+@import '@fontsource/libre-baskerville/400.css';
+
+@theme {
+  --font-sans: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Libre Baskerville', Georgia, serif;
+}
+
+/* Light is the default; dark follows the system setting. */
+:root {
+  color-scheme: light;
+  --sq-surface-primary: #f0ede8;
+  --sq-surface-secondary: #e8e4dd;
+  --sq-content-primary: #0f0e0d;
+  --sq-content-secondary: #6b6660;
+  --sq-rule: rgba(15, 14, 13, 0.12);
+  --accent-gold: #e8b53c;
+  --accent-red: #c5342d;
+  /* Sudoku digit owners: Snap is amber, you are blue. */
+  --snap-digit: #7a5100;
+  --snap-cell: rgba(232, 181, 60, 0.18);
+  --you-digit: #1f44d1;
+  --you-cell: rgba(45, 91, 255, 0.10);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --sq-surface-primary: #0f0e0d;
+    --sq-surface-secondary: #1c1a17;
+    --sq-content-primary: #f0ede8;
+    --sq-content-secondary: rgba(240, 237, 232, 0.55);
+    --sq-rule: rgba(240, 237, 232, 0.18);
+    --accent-gold: #d8b977;
+    --accent-red: #d18078;
+    --snap-digit: #e9c470;
+    --snap-cell: rgba(216, 185, 119, 0.16);
+    --you-digit: #9aabf7;
+    --you-cell: rgba(110, 135, 240, 0.14);
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--sq-surface-primary);
+  color: var(--sq-content-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Snap's probability discs bloom in by rank when a decision lands. */
+@keyframes heat-bloom {
+  from { opacity: 0; transform: scale(0.35); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.heat-bloom {
+  animation: heat-bloom 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes thinking-dot {
+  0%, 80%, 100% { opacity: 0.25; }
+  40%           { opacity: 1; }
+}
+.thinking-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+.thinking-dots > span {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--accent-gold);
+  animation: thinking-dot 1.2s ease-in-out infinite;
+}
+.thinking-dots > span:nth-child(2) { animation-delay: 0.15s; }
+.thinking-dots > span:nth-child(3) { animation-delay: 0.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .heat-bloom { animation: none; }
+  .thinking-dots > span { animation: none; opacity: 0.7; }
+}
