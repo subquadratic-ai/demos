@@ -1,0 +1,54 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+@import '@fontsource/libre-baskerville/400.css';
+
+@theme {
+  --font-sans: 'Geist Variable', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Libre Baskerville', Georgia, serif;
+}
+
+/* Light is the default; dark follows the system setting. */
+:root {
+  color-scheme: light;
+  --sq-surface-primary: #f0ede8;
+  --sq-surface-secondary: #e8e4dd;
+  --sq-content-primary: #0f0e0d;
+  --sq-content-secondary: #6b6660;
+  --sq-rule: rgba(15, 14, 13, 0.12);
+  /* Gold is Snap's; blue marks the document step, orange the questions. */
+  --accent-gold: #e8b53c;
+  --accent-gold-soft: rgba(232, 181, 60, 0.18);
+  --accent-blue: #2d5bff;
+  --accent-blue-soft: rgba(45, 91, 255, 0.12);
+  --accent-orange: #e04e1f;
+  --accent-orange-soft: rgba(224, 78, 31, 0.12);
+  --accent-green: #3f7a3a;
+  --accent-red: #c5342d;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --sq-surface-primary: #0f0e0d;
+    --sq-surface-secondary: #1c1a17;
+    --sq-content-primary: #f0ede8;
+    --sq-content-secondary: rgba(240, 237, 232, 0.55);
+    --sq-rule: rgba(240, 237, 232, 0.18);
+    --accent-gold: #d8b977;
+    --accent-gold-soft: rgba(216, 185, 119, 0.16);
+    --accent-blue: #6e87f0;
+    --accent-blue-soft: rgba(110, 135, 240, 0.14);
+    --accent-orange: #e09971;
+    --accent-orange-soft: rgba(224, 153, 113, 0.14);
+    --accent-green: #8bb582;
+    --accent-red: #d18078;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--sq-surface-primary);
+  color: var(--sq-content-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
