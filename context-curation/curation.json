@@ -1,0 +1,403 @@
+{
+ "n_files": 56,
+ "repo_tokens": 225692,
+ "n_where_questions": 18,
+ "n_questions_total": 22,
+ "n_unit_questions": 26,
+ "keep_threshold": 0.3,
+ "files": [
+  {
+   "path": "LICENSE",
+   "p": 0.0001,
+   "kept": false
+  },
+  {
+   "path": "mise.toml",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "package.json",
+   "p": 0.0004,
+   "kept": false
+  },
+  {
+   "path": "scripts/measure.fish",
+   "p": 0.0005,
+   "kept": false
+  },
+  {
+   "path": "src/-private/utils.ts",
+   "p": 0.0032,
+   "kept": false
+  },
+  {
+   "path": "src/index.ts",
+   "p": 0.0116,
+   "kept": false
+  },
+  {
+   "path": "src/maybe.ts",
+   "p": 0.9258,
+   "kept": true
+  },
+  {
+   "path": "src/result.ts",
+   "p": 0.9522,
+   "kept": true
+  },
+  {
+   "path": "src/standard-schema.ts",
+   "p": 0.0035,
+   "kept": false
+  },
+  {
+   "path": "src/task.ts",
+   "p": 0.9553,
+   "kept": true
+  },
+  {
+   "path": "src/task/delay.ts",
+   "p": 0.0037,
+   "kept": false
+  },
+  {
+   "path": "src/test-support.ts",
+   "p": 0.0042,
+   "kept": false
+  },
+  {
+   "path": "src/toolbelt.ts",
+   "p": 0.9721,
+   "kept": true
+  },
+  {
+   "path": "src/unit.ts",
+   "p": 0.0004,
+   "kept": false
+  },
+  {
+   "path": "ts/base.tsconfig.json",
+   "p": 0.0006,
+   "kept": false
+  },
+  {
+   "path": "ts/integration-test.tsconfig.json",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "ts/publish.tsconfig.json",
+   "p": 0.0003,
+   "kept": false
+  },
+  {
+   "path": "ts/test.tsconfig.json",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "tsconfig.json",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "vitest.config.ts",
+   "p": 0.0003,
+   "kept": false
+  },
+  {
+   "path": "vitest.integration.config.ts",
+   "p": 0.0003,
+   "kept": false
+  },
+  {
+   "path": "test/integration/standard-schema.test.ts",
+   "p": 0.0022,
+   "kept": false
+  },
+  {
+   "path": "test/interop.test.ts",
+   "p": 0.0113,
+   "kept": false
+  },
+  {
+   "path": "test/maybe.test.ts",
+   "p": 0.0369,
+   "kept": false
+  },
+  {
+   "path": "test/result.test.ts",
+   "p": 0.0144,
+   "kept": false
+  },
+  {
+   "path": "test/standard-schema.test.ts",
+   "p": 0.0017,
+   "kept": false
+  },
+  {
+   "path": "test/task.test.ts",
+   "p": 0.0168,
+   "kept": false
+  },
+  {
+   "path": "test/test-support.test.ts",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "test/toolbelt.test.ts",
+   "p": 0.0199,
+   "kept": false
+  },
+  {
+   "path": "test/unit.test.ts",
+   "p": 0.0004,
+   "kept": false
+  },
+  {
+   "path": "CHANGELOG.md",
+   "p": 0.0034,
+   "kept": false
+  },
+  {
+   "path": "CODE_OF_CONDUCT.md",
+   "p": 0.0001,
+   "kept": false
+  },
+  {
+   "path": "CONTRIBUTING.md",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "README.md",
+   "p": 0.0007,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/background/comparison.md",
+   "p": 0.0004,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/background/design-philosophy.md",
+   "p": 0.0016,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/background/index.md",
+   "p": 0.0001,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/background/naming.md",
+   "p": 0.0017,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/introduction/getting-started.md",
+   "p": 0.0011,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/introduction/index.md",
+   "p": 0.0007,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/introduction/tour.md",
+   "p": 0.0021,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/introduction/tutorial/index.md",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/introduction/tutorial/maybe.md",
+   "p": 0.0005,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/introduction/tutorial/result.md",
+   "p": 0.0013,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/introduction/tutorial/task.md",
+   "p": 0.0005,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/understanding/index.md",
+   "p": 0.0004,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/understanding/maybe.md",
+   "p": 0.0014,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/understanding/reference-types.md",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/understanding/result.md",
+   "p": 0.0005,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/understanding/standard-schema.md",
+   "p": 0.0003,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/understanding/task/index.md",
+   "p": 0.0012,
+   "kept": false
+  },
+  {
+   "path": "docs/guide/understanding/task/retries-and-delays.md",
+   "p": 0.0024,
+   "kept": false
+  },
+  {
+   "path": "docs/index.md",
+   "p": 0.0021,
+   "kept": false
+  },
+  {
+   "path": "docs/public/CNAME",
+   "p": 0.0008,
+   "kept": false
+  },
+  {
+   "path": "docs/tsconfig.json",
+   "p": 0.0002,
+   "kept": false
+  },
+  {
+   "path": "docs/updates/index.md",
+   "p": 0.0003,
+   "kept": false
+  }
+ ],
+ "kept": [
+  {
+   "path": "src/toolbelt.ts",
+   "lines": 162,
+   "ranges": [
+    [
+     1,
+     30
+    ],
+    [
+     70,
+     89
+    ],
+    [
+     90,
+     113
+    ],
+    [
+     116,
+     136
+    ]
+   ]
+  },
+  {
+   "path": "src/task.ts",
+   "lines": 3070,
+   "ranges": [
+    [
+     75,
+     223
+    ],
+    [
+     1066,
+     1120
+    ],
+    [
+     2276,
+     2324
+    ],
+    [
+     2372,
+     2421
+    ],
+    [
+     2875,
+     2949
+    ]
+   ]
+  },
+  {
+   "path": "src/result.ts",
+   "lines": 2052,
+   "ranges": [
+    [
+     1899,
+     1958
+    ]
+   ]
+  },
+  {
+   "path": "src/maybe.ts",
+   "lines": 1879,
+   "ranges": [
+    [
+     67,
+     183
+    ],
+    [
+     184,
+     300
+    ],
+    [
+     461,
+     471
+    ],
+    [
+     600,
+     630
+    ],
+    [
+     639,
+     687
+    ],
+    [
+     1334,
+     1346
+    ],
+    [
+     1362,
+     1419
+    ],
+    [
+     1429,
+     1472
+    ],
+    [
+     1476,
+     1515
+    ],
+    [
+     1580,
+     1592
+    ]
+   ]
+  }
+ ],
+ "next_best": 0.03694750918766033,
+ "packet_bytes": 7193,
+ "elapsed_s": 254.334,
+ "pass_s": {
+  "answer": 163.4222,
+  "units": 89.541
+ }
+}

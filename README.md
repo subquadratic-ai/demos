@@ -8,6 +8,12 @@ Small, self-contained apps built on **SubQ Snap** (`subq-snap-preview`) and the 
 | [Go](go/) | A 9×9 game. See where Snap is looking before each stone lands. |
 | [Sudoku](sudoku/) | Snap fills a cell only when it’s sure. Watch it solve, or race it. |
 | [Playground](playground/) | Add a document, ask multiple-choice questions about it, and see the probability Snap gives every answer. Includes candidate screening, lead qualification and ticket triage examples. |
+| [Screen Scout](screen-scout/) | Age-gate a show or video from its full transcript. |
+| [Policy Check](policy-check/) | One claim against a whole rulebook. Snap names the clause it breaks. |
+| [Refund Desk](refund-desk/) | Approve or decline a refund from the policies and the signed agreement. |
+| [Candidate Screening](candidate-screening/) | Screen resumes against a job description, requirement by requirement. |
+| [Listing Match](listing-match/) | Screen every listing in a city, cover photos included, against a guest's brief. |
+| [Context Curation](context-curation/) | A coding agent gets a whole repo. Snap returns the files and line ranges that matter. |
 
 ## Quick start
 
@@ -21,7 +27,7 @@ npm install
 npm run dev
 ```
 
-Each folder stands alone: copy just the one you want and it runs.
+Each folder stands alone: copy just the one you want and it runs. Each folder's own README has its run steps; the newer demos use Next.js or Python instead of Vite. The video render scripts share `brand/` (logos and the record-and-cut helper).
 
 ## How the demos are built
 

@@ -1,0 +1,41 @@
+{
+  "size": [
+    1920,
+    1080
+  ],
+  "marks_s": {
+    "start": 2.639,
+    "done": 3.498,
+    "gate": 6.627,
+    "end": 8.64
+  },
+  "recorded": "2026-11-19 23:18",
+  "tokens": 5721,
+  "ranked": [
+    {
+      "rank": 1,
+      "name": "Alex Rivera",
+      "call": "ADVANCE"
+    },
+    {
+      "rank": 2,
+      "name": "Priya Sharma",
+      "call": "ADVANCE"
+    },
+    {
+      "rank": 3,
+      "name": "Sam Nguyen",
+      "call": "ADVANCE"
+    },
+    {
+      "rank": 4,
+      "name": "Dana Okafor",
+      "call": "REJECT"
+    },
+    {
+      "rank": 5,
+      "name": "Marcus Lee",
+      "call": "REJECT"
+    }
+  ]
+}

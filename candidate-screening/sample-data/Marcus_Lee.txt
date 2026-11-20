@@ -1,0 +1,21 @@
+Marcus Lee
+Frontend Engineer
+
+Summary
+Creative frontend engineer with 4 years building polished web apps. Passionate
+about design systems, accessibility, and delightful UX.
+
+Experience
+Frontend Engineer — SaaS Analytics Co (2021–present)
+- Built React/TypeScript dashboards used by thousands of customers
+- Led adoption of a component library and improved Lighthouse scores
+- Collaborated with backend team on REST API contracts
+
+UI Developer — Agency (2020–2021)
+- Delivered marketing sites with Next.js and Tailwind
+
+Skills
+React, TypeScript, Next.js, CSS, Figma, some Node.js for BFF endpoints
+
+Education
+B.A. Design + minor in Computer Science

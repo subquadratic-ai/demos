@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Listing Match</title>
+<link rel="icon" href="/static/symbol-color.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* SubQ brand: warm neutral surfaces, near-black ink, one accent (blue), Libre Baskerville over Manrope. */
+  :root {
+    --bg: #f0ede8; --panel: #fbfaf8; --ink: #0f0e0d; --body: #1c1919; --muted: #5e5a55; --faint: #888888;
+    --line: rgba(15, 14, 13, .12); --field: #f6f4f0;
+    --blue: #2f499e; --blue-bg: rgba(47, 73, 158, .1); --green: #3f7d3c; --orange: #ea5324; --yellow: #fee235;
+    --serif: "Libre Baskerville", Georgia, serif;
+    --sans: Manrope, system-ui, -apple-system, sans-serif;
+    --mono: "Roboto Mono", ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--body); font: 15px/1.5 var(--sans); }
+  button { font: inherit; }
+
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 20px 16px 32px; display: flex; flex-direction: column; gap: 14px; position: relative; }
+  .label { font: 800 11px var(--sans); color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .label em { font-style: normal; font-weight: 600; letter-spacing: .02em; text-transform: none; color: var(--faint); font-size: 12px; margin-left: 6px; }
+
+  /* The search: a summary line and the wishes. The full controls live in the drawer. */
+  .brief { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; display: grid; gap: 9px; transition: opacity .3s; position: relative; }
+  /* SubQ's time to analyze every listing, centered in the bar: counts up live, then shows the server-measured time. */
+  .timer { display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; transition: opacity .3s; }
+  .timer[hidden] { display: flex !important; opacity: 0; }
+  .timer .k { font: 800 11px var(--sans); color: var(--muted); text-transform: uppercase; letter-spacing: .12em; }
+  .timer .v { font: 500 34px/1 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+  .timer .v small { font: 600 18px var(--sans); color: var(--muted); margin-left: 2px; }
+  .timer.done .v { color: var(--blue); }
+  .timer .in { font: 600 11.5px var(--sans); color: var(--muted); white-space: nowrap; margin-top: 2px; height: 15px; line-height: 15px; }
+  .timer .in b { color: var(--ink); font-weight: 700; }
+  .timer .how { height: 14px; line-height: 14px; font: italic 500 11px var(--sans); color: var(--faint); white-space: nowrap; opacity: 0; transition: opacity .3s; }
+  .timer.done .how { opacity: 1; }
+  /* Three columns: the search (facts over wishes) on the left, the timer in the middle, the buttons on the right. */
+  .brief { grid-template-columns: minmax(0, 1fr) auto auto auto; column-gap: 12px; align-items: center; }
+  .facts { grid-column: 1; grid-row: 1; }
+  .wishes { grid-column: 1; grid-row: 2; }
+  .timer { grid-column: 2; grid-row: 1 / 3; padding: 0 28px; border-left: 1px solid var(--line); border-right: 1px solid var(--line); margin-right: 12px; }
+  #tweak { grid-column: 3; grid-row: 1 / 3; }
+  #run { grid-column: 4; grid-row: 1 / 3; min-width: 148px; justify-content: center; }
+  .brief-top { display: contents; }  /* its facts and buttons sit in the bar's grid (see .brief) */
+  .facts { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-weight: 700; color: var(--ink); font-size: 15px; }
+  .facts .city { font: 700 17px var(--serif); }
+  .facts .dot { color: var(--faint); font-weight: 400; }
+  .facts .lim { font-weight: 600; color: var(--body); }
+  .wishes { display: flex; flex-wrap: wrap; gap: 6px; }
+  .wish { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 99px; background: #fff; border: 1px solid var(--line); font: 600 13px var(--sans); color: var(--ink); animation: pop .4s cubic-bezier(.2, 1.4, .4, 1) backwards; animation-delay: calc(var(--i) * 45ms); }
+  .wish.photo { border-color: rgba(47, 73, 158, .35); background: var(--blue-bg); color: var(--blue); }
+  .cam { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linejoin: round; flex: none; }
+  .btn { border: 0; border-radius: 4px; padding: 10px 20px; font: 700 14px var(--sans); cursor: pointer; background: var(--ink); color: #fff; white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; transition: transform .15s, background .15s; }
+  .btn:hover { background: #2a2826; } .btn:active { transform: scale(.97); }
+  .btn.go { background: var(--blue); }
+  .btn.go:hover { background: #263d86; }
+  .btn.go.ready { animation: beckon 2.2s ease-in-out infinite; }
+  .btn.stop { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .btn.ghost { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+  .btn.ghost:hover { box-shadow: inset 0 0 0 1px var(--ink); background: transparent; }
+  .btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+  .btn.go svg { fill: currentColor; stroke: none; }
+
+  /* One lane per model, a photo tile per listing. */
+  .race { position: relative; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+  .lanes { display: grid; gap: 12px; grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr)); flex: 1; min-height: 0; }
+  .lane { --c: var(--blue); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; display: flex; flex-direction: column; min-width: 0; min-height: 0; position: relative; overflow: hidden; }
+  .lane.subq { --c: var(--blue); }
+  .lane-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 14px 0; }
+  .who { display: flex; align-items: center; gap: 8px; min-width: 0; font: 800 17px var(--sans); color: var(--c); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .who img { width: 22px; height: 22px; }
+  .who .sw { width: 14px; height: 14px; border-radius: 3px; background: var(--c); flex: none; }
+  .status { font: 800 10.5px var(--sans); text-transform: uppercase; letter-spacing: .08em; padding: 4px 9px; border-radius: 99px; background: var(--field); color: var(--muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+  .status.live { color: var(--c); background: color-mix(in srgb, var(--c) 10%, transparent); }
+  .status.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; animation: blink 1s infinite; }
+  .status.ok { color: #fff; background: var(--c); }
+  .status.err { color: var(--orange); background: rgba(234, 83, 36, .1); }
+  .behind { font: 700 12px var(--mono); color: var(--orange); background: rgba(234, 83, 36, .1); padding: 3px 8px; border-radius: 99px; white-space: nowrap; animation: pop .35s backwards; }
+  .metrics { display: grid; grid-template-columns: 1.1fr 1fr .9fr; padding: 6px 14px 8px; gap: 8px; }
+  .lane.solo .metrics { grid-template-columns: repeat(3, 170px); justify-content: center; text-align: center; }
+  .m .k { font: 800 10px var(--sans); color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+  .m .v { font: 500 26px/1.15 var(--mono); color: var(--ink); font-variant-numeric: tabular-nums; letter-spacing: -.02em; white-space: nowrap; }
+  .m .v small { font: 600 13px var(--sans); color: var(--muted); letter-spacing: 0; }
+  .lane.subq .m .v.t { color: var(--blue); }
+  .bar { height: 6px; background: var(--field); margin: 0 14px; border-radius: 99px; overflow: visible; position: relative; }
+  .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--c); border-radius: 99px; transition: width .25s ease-out; }
+  .lane.live .bar i::after { content: ""; position: absolute; right: -3px; top: -3px; width: 12px; height: 12px; border-radius: 50%; background: var(--c); box-shadow: 0 0 0 4px color-mix(in srgb, var(--c) 25%, transparent), 0 0 14px var(--c); }
+  /* The lane header (name, live time, cost, count, status, progress bar) is hidden: the cards tell the story. Comparing lanes keeps just the model name so the lanes can be told apart. */
+  .lane .metrics, .lane .bar, .lane .status, .lane .slot, .lane.solo .lane-head { display: none; }
+  .gridbox { flex: 1; min-height: 0; padding: 10px 14px 14px; position: relative; display: flex; align-items: flex-start; justify-content: center; }
+  .grid { display: grid; grid-template-columns: repeat(var(--cols, 7), var(--tw, 60px)); gap: var(--gap, 6px); }
+  /* A listing card: the cover photo, then the name, the key facts and the start of the description. */
+  .tile { width: var(--tw, 60px); border-radius: 5px; background: #fff; box-shadow: 0 0 0 1px var(--line); position: relative; overflow: hidden; transition: filter .35s, opacity .35s, transform .35s, box-shadow .35s; }
+  .tile .ph { height: var(--phh, 40px); background: var(--field) center / cover no-repeat; position: relative; overflow: hidden; }
+  .tile .info { padding: 6px 9px 7px; display: grid; gap: 1px; height: var(--ih, 42px); align-content: start; overflow: hidden; }
+  .tile .nm { font: 700 12px/1.3 var(--serif); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tile .meta { font: 600 10.5px/1.3 var(--sans); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tile .meta b { color: var(--ink); font-weight: 800; }
+  .tile .bl { font: 500 10px/1.3 var(--sans); color: var(--faint); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 2px; }
+  .grid:not(.blurbs) .tile .bl { display: none; }
+  .grid.bare .tile .info { display: none; }
+  /* Scanning: a cool tint over the photo, and a bright scan line with a soft trail sweeping down it once, top to bottom,
+     in SCAN_PASS_MS. */
+  .tile.scan .ph::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 40%; pointer-events: none;
+    background: linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--c) 18%, transparent) 55%, color-mix(in srgb, var(--c) 55%, transparent) 92%, #fff 97%, transparent 100%);
+    box-shadow: 0 0 0 9999px color-mix(in srgb, var(--c) 10%, transparent);
+    filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--c) 90%, transparent));
+    animation: sweep 1s cubic-bezier(.45, 0, .55, 1) both; }
+  .tile.yes { filter: none; opacity: 1; animation: pop .4s cubic-bezier(.2, 1.5, .4, 1); }
+  .tile.yes .ph::before { content: ""; position: absolute; z-index: 1; right: 4px; top: 4px; width: 15px; height: 15px; border-radius: 50%; background: var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='4'/%3E%3C/svg%3E") center / 9px no-repeat; }
+  .tile.no { filter: grayscale(1); opacity: .5; transform: scale(.94); }
+  .tile.fail { opacity: .2; outline: 1px dashed var(--orange); }
+  /* After a lane finishes: the listings that didn't match fade to white and leave, and the matches close ranks. */
+  .tile.fading { opacity: 0; filter: grayscale(1) brightness(1.8); transform: scale(.9); transition: opacity .3s ease-in, filter .3s ease-in, transform .3s ease-in; }
+  .tile.gone { display: none; }
+  .tile.settled { animation: none; }
+  /* The matches, best first, in a carousel: three across, centered, scrolling right for the rest. */
+  .carousel { position: absolute; inset: 0; }
+  .track { height: 100%; display: flex; align-items: center; gap: 60px; padding: 0 56px; scroll-padding: 0 56px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; }
+  .track::-webkit-scrollbar { display: none; }
+  /* Three cards fill the strip between the arrow margins, and the gap between cards is a touch wider than those margins, so
+     the next card waits just past the panel's edge, out of view. While the matches fly in (all of them: the ones past the top 3
+     fly to their places off to the right), the strip holds still, with no snapping or smooth scrolling. */
+  .track.moving { overflow: hidden; scroll-snap-type: none; scroll-behavior: auto; }
+  .track.moving .tile { will-change: transform; transition: none; }
+  .track.noblurbs .tile .bl { display: none; }
+  /* A carousel card is its grid card scaled up (not restyled), so moving there is pure motion with no reflow. Each slot
+     is a third of the strip; the card inside keeps its grid size and is scaled to fill it (see sizeSlots). */
+  .cslot { flex: 0 0 calc((100% - 120px) / 3); scroll-snap-align: start; position: relative; }
+  .cslot > .tile { position: absolute; left: 0; top: 0; transform-origin: top left; }
+  /* Settled in the carousel, the cards lift off the panel. (Card-local px: the card is scaled up about 1.5x.) */
+  .track:not(.moving) .tile { box-shadow: 0 0 0 1px var(--line), 0 2px 5px rgba(15, 14, 13, .08), 0 10px 26px rgba(15, 14, 13, .18); transition: box-shadow .5s ease-out; }
+  .track > .cslot:first-child { margin-left: auto; }
+  .track > .cslot:last-child { margin-right: auto; }
+  .tile .rank { animation: fade .4s backwards; position: absolute; left: 6px; top: 6px; z-index: 1; min-width: 17px; height: 17px; padding: 0 5px; border-radius: 99px; background: var(--ink); color: #fff; font: 800 9px/17px var(--sans); text-align: center; }  /* grid-card size; it scales up with the card */
+  .tile .rank.lead { background: var(--blue); }
+  /* As the matches start moving into the carousel, each card's check mark fades out and a heart takes its place.
+     Sizes are card-local px; the card is scaled up about 1.5x in the carousel. */
+  .tile.yes .ph::before { transition: opacity .2s ease-out; }
+  .track.hearts .tile .ph::before { opacity: 0; }
+  .fav { position: absolute; z-index: 2; right: 7px; top: 7px; width: 20px; height: 20px; padding: 0; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .92); color: var(--ink); display: grid; place-items: center; cursor: pointer; box-shadow: 0 1px 3px rgba(15, 14, 13, .25); opacity: 0; transform: scale(.6); pointer-events: none; transition: opacity .25s ease-out .1s, transform .3s cubic-bezier(.2, 1.5, .4, 1) .1s; }
+  .track.hearts .fav { opacity: 1; transform: none; pointer-events: auto; }
+  .fav svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linejoin: round; transition: fill .15s, stroke .15s; }
+  .fav:hover { color: var(--orange); }
+  .fav:focus-visible { outline: 2px solid var(--blue); outline-offset: 1px; }
+  .fav[aria-pressed="true"] { color: var(--orange); }
+  .fav[aria-pressed="true"] svg { fill: currentColor; }
+  /* Favoriting: the heart springs big and settles, a ring bursts out, and a spray of dots flies off. */
+  .fav.burst { animation: favpop .6s cubic-bezier(.2, 1.4, .4, 1); }
+  .fav.burst::before { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--orange); animation: favring .55s ease-out forwards; pointer-events: none; }
+  .fav.burst::after { content: ""; position: absolute; left: 50%; top: 50%; width: 3px; height: 3px; margin: -1.5px; border-radius: 50%; pointer-events: none;
+    animation: favdots .6s cubic-bezier(.1, .7, .3, 1) forwards; }
+  .fav.unpop { animation: favunpop .25s ease-out; }
+  /* In the carousel the card stops clipping its corners (the photo rounds its own), so the burst can spill past them. */
+  .track .tile { overflow: visible; }
+  .track .tile .ph { overflow: visible; border-radius: 5px 5px 0 0; }
+  @keyframes favpop { 0% { transform: scale(1); } 25% { transform: scale(1.55); } 55% { transform: scale(.88); } 75% { transform: scale(1.08); } 100% { transform: scale(1); } }
+  @keyframes favunpop { 50% { transform: scale(.8); } }
+  @keyframes favring { from { transform: scale(.8); opacity: 1; } to { transform: scale(2.1); opacity: 0; border-width: .5px; } }
+  @keyframes favdots {
+    from { opacity: 1; box-shadow: 0 0 0 1px #ea5324, 0 0 0 1px #fee235, 0 0 0 1px #ea5324, 0 0 0 1px #2f499e, 0 0 0 1px #ea5324, 0 0 0 1px #fee235, 0 0 0 1px #ea5324, 0 0 0 1px #2f499e; }
+    70% { opacity: 1; }
+    to { opacity: 0; box-shadow: 0 -19px 0 0 #ea5324, 13px -13px 0 0 #fee235, 19px 0 0 0 #ea5324, 13px 13px 0 0 #2f499e, 0 19px 0 0 #ea5324, -13px 13px 0 0 #fee235, -19px 0 0 0 #ea5324, -13px -13px 0 0 #2f499e; }
+  }
+  .cnav { position: absolute; top: 50%; translate: 0 -50%; z-index: 2; width: 46px; height: 46px; border-radius: 99px; border: 1px solid var(--line); background: #fff; color: var(--ink); display: grid; place-items: center; cursor: pointer; box-shadow: 0 6px 18px rgba(15, 14, 13, .14); transition: opacity .2s; }
+  .cnav:hover { border-color: var(--muted); }
+  .cnav:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+  .cnav svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+  .cnav.prev { left: 8px; } .cnav.next { right: 8px; }
+  .cnav[disabled] { opacity: 0; pointer-events: none; }
+
+
+
+
+  .toast { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 8; background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 4px; font-size: 13px; max-width: 90%; animation: rise .3s; }
+
+  /* The drawer: every search setting, out of the way until asked for. */
+  .scrim { position: absolute; inset: 0; z-index: 20; background: rgba(240, 237, 232, .6); backdrop-filter: blur(3px); animation: fade .2s; }
+  .drawer { position: absolute; left: 16px; right: 16px; z-index: 21; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 24px 60px rgba(15, 14, 13, .18); padding: 18px 20px; display: grid; gap: 16px; max-height: 760px; overflow: auto; animation: drop .3s cubic-bezier(.2, 1.1, .4, 1); }
+  .group { display: grid; gap: 7px; }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  select, input[type=number], input[type=text] { font: 500 14px var(--sans); color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; outline: none; min-width: 0; }
+  select:focus, input:focus { border-color: var(--ink); }
+  .field { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .field input { width: 110px; }
+  .check { display: flex; align-items: center; gap: 8px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 4px; background: #fff; cursor: pointer; user-select: none; font-weight: 600; font-size: 14px; color: var(--ink); }
+  .check input { accent-color: var(--blue); width: 16px; height: 16px; margin: 0; }
+  .check small { color: var(--muted); font-weight: 500; }
+  .chip { border: 1px solid var(--line); background: #fff; color: var(--ink); border-radius: 99px; padding: 6px 13px; font: 600 13px var(--sans); cursor: pointer; }
+  .chip:hover { border-color: var(--ink); }
+  .chip.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .crit { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 99px; background: #fff; font-size: 13px; }
+  .crit .lbl { color: var(--ink); font-weight: 600; padding: 5px 4px 5px 11px; display: inline-flex; align-items: center; gap: 5px; }
+  .crit.photo .lbl { color: var(--blue); }
+  .crit button { border: 0; background: transparent; cursor: pointer; color: var(--faint); padding: 5px 8px; }
+  .crit .mt { font: 800 9.5px var(--sans); text-transform: uppercase; letter-spacing: .08em; border-radius: 99px; padding: 2px 6px; margin: 0 2px; }
+  .crit.is-must { border-color: var(--blue); }
+  .crit.is-must .mt { background: var(--blue); color: #fff; }
+  .crit .x:hover { color: var(--orange); }
+  .add { display: flex; gap: 8px; flex-wrap: wrap; }
+  .add input { flex: 1; min-width: 220px; }
+  .slider { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink); font-weight: 700; }
+  .slider input { width: 200px; accent-color: var(--blue); }
+  .estimate { color: var(--muted); font-size: 13px; }
+  .hint { color: var(--orange); font-size: 13px; }
+  .hint:empty { display: none; }
+  .credit { margin: 0; font-size: 11.5px; color: var(--faint); }
+  .credit a { color: inherit; }
+  .drawer-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 14px; }
+
+  /* Below the square: the numbers in full, and how it works. */
+
+  @keyframes pop { from { transform: scale(.6); opacity: 0; } }
+  @keyframes fade { from { opacity: 0; } }
+  @keyframes rise { from { transform: translateY(14px); opacity: 0; } }
+  @keyframes drop { from { transform: translateY(-12px); opacity: 0; } }
+  @keyframes blink { 50% { opacity: .25; } }
+  @keyframes sweep { from { transform: translateY(-100%); } to { transform: translateY(250%); } }
+  @keyframes shimmer { to { background-position: -300% 0; } }
+  @keyframes beckon { 0%, 100% { box-shadow: 0 0 0 0 rgba(47, 73, 158, .45); } 60% { box-shadow: 0 0 0 10px rgba(47, 73, 158, 0); } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+  @media (max-width: 699px) {
+    .lanes { grid-template-columns: 1fr; }
+    .lane { min-height: 340px; }
+    .drawer { position: fixed; top: 16px; max-height: calc(100vh - 32px); }
+    .scrim { position: fixed; }
+    .m .v { font-size: 21px; }
+  }
+
+  /* Frame mode: the page fills the whole window at a scale where its shorter side is 1080px (see fit()). A square
+     window gives the 1080x1080 social frame; a wide one gives the cards more room. */
+  @media (min-width: 700px) {
+    .wrap { width: 1080px; height: 1080px; max-width: none; padding: 64px; overflow: hidden; }
+    .race { flex: 1; }
+    .drawer { left: 64px; right: 64px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="wrap">
+  <section class="brief" id="brief" aria-label="Your search">
+    <div class="brief-top">
+      <div class="facts" id="facts"></div>
+      <button class="btn ghost" id="tweak" type="button"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Edit search</button>
+      <button class="btn go ready" id="run" type="button"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z"/></svg><span>Find matches</span></button>
+    </div>
+    <div class="wishes" id="wishes"></div>
+    <div class="timer" id="timer" hidden aria-live="polite"><span class="k" id="timerK">Analyzing</span><span class="v" id="timerV">0.00<small>s</small></span><span class="how" id="timerHow">full text from all listings + photos</span></div>
+  </section>
+
+  <section class="race" id="race" aria-label="Listings being checked">
+    <div class="lanes" id="lanes"></div>
+  </section>
+
+
+
+  <div class="scrim" id="scrim" hidden></div>
+  <form class="drawer" id="drawer" hidden>
+    <div class="group">
+      <span class="label">City and trip</span>
+      <div class="row"><select id="city" aria-label="City"></select><span id="presets" class="row"></span></div>
+    </div>
+    <div class="group">
+      <span class="label">Hard limits <em>checked in code, not by a model</em></span>
+      <div class="row">
+        <label class="field">Guests<input type="number" id="guests" min="1" max="16"></label>
+        <label class="field">Max $ / night<input type="number" id="maxPrice" min="20" step="10"></label>
+        <label class="check"><input type="checkbox" id="pets"> Pets allowed</label>
+      </div>
+    </div>
+    <div class="group">
+      <span class="label">Wishes <em>one yes/no question each · click MUST to make it a must-have · the camera marks wishes judged from the photo</em></span>
+      <div class="row" id="criteria"></div>
+      <div class="add">
+        <select id="libPick" aria-label="Add a wish"></select>
+        <input type="text" id="custom" placeholder="Or write your own yes/no question, e.g. Does the photo show a hot tub?" maxlength="300">
+        <button type="button" class="btn ghost" id="addCustom">Add</button>
+      </div>
+    </div>
+    <div class="group">
+      <span class="label">Run</span>
+      <div class="row" id="models"></div>
+    </div>
+    <div class="group">
+      <div class="slider"><span>Listings</span><input type="range" id="count" min="10" max="100" step="5"><span id="countLabel"></span></div>
+      <div class="estimate" id="estimate"></div>
+    </div>
+    <div class="hint" id="hint"></div>
+    <p class="credit">Listing data and photos: <a href="https://insideairbnb.com/" target="_blank" rel="noopener">Inside Airbnb</a>, CC BY 4.0</p>
+    <div class="drawer-foot">
+      <button class="btn ghost" type="button" id="closeDrawer">Close</button>
+      <button class="btn go" type="submit"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z"/></svg>Run with these</button>
+    </div>
+  </form>
+</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const CAM = `<svg class="cam" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 8.5h3.2l1.8-2.7h7l1.8 2.7h3.2v10.7h-17z"/><circle cx="12" cy="13.6" r="3.4"/></svg>`;
+const CHECK = `<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+const RIVAL_COLORS = ["#0f0e0d", "#8a5a2b", "#5e5a55"];
+const SCAN_PASS_MS = 1000;  // the scan line's one sweep down a photo; SubQ answers in 0.5–1.0s at 24 in flight (2026-10-11)
+const MATCH = .6;  // a listing is a match when it meets every must-have and its score is at least this
+
+let config = null, brief = null, preview = { cards: [], city: "" }, run = null, controller = null, Z = 1;
+
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const money = v => v >= 1 ? `$${v.toFixed(2)}` : v >= 0.01 ? `$${v.toFixed(3)}` : `$${v.toFixed(4)}`;
+const lib = id => config.library.find(l => l.id === id) || {};
+const wishLabel = c => c.label || lib(c.id).label || c.question;
+const isPhoto = c => c.photo ?? lib(c.id).photo ?? /photo/i.test(c.question || "");
+const modelName = id => (config.models.find(m => m.id === id) || {}).name || id;
+const cityName = slug => (config.cities.find(c => c.slug === slug) || {}).city || slug;
+function hint(t) { $("#hint").textContent = t || ""; }
+
+async function init() {
+  config = await (await fetch("/api/config")).json();
+  $("#city").innerHTML = config.cities.map(c => `<option value="${c.slug}">${esc(c.city)}</option>`).join("");
+  $("#presets").innerHTML = Object.entries(config.presets).map(([k, p]) => `<button type="button" class="chip" data-p="${k}">${esc(p.title)}</button>`).join("");
+  $("#models").innerHTML = `<label class="check"><input type="radio" name="rival" value=""> SubQ only</label>`
+    + config.models.map(m => `<label class="check"><input type="radio" name="rival" value="${m.id}"> SubQ vs ${esc(m.name)}</label>`).join("");
+  $("#count").max = config.max_listings;
+  document.querySelectorAll("#presets .chip").forEach(b => b.addEventListener("click", () => { applyPreset(b.dataset.p); changed(); }));
+  brief = { city: "austin", preset: null, filters: {}, criteria: [], models: [...config.default_models], listings: config.default_listings };
+  applyPreset(config.default_preset);
+  syncDrawer();
+  if (!config.subq.available) toast("Add SUBQ_API_KEY to .env and restart the server.");
+  else if (!config.llm_available) toast("Add OPENROUTER_API_KEY to .env to compare with LLMs.");
+  await loadPreview();
+  if (new URLSearchParams(location.search).has("autorun")) setTimeout(startRun, 900);
+}
+
+function applyPreset(key) {
+  const p = config.presets[key];
+  brief.preset = key;
+  brief.filters = { ...p.filters };
+  brief.criteria = p.criteria.map(c => ({ ...c }));
+  syncDrawer();
+}
+
+// ---- The search summary -------------------------------------------------------------------------------------------
+function renderBrief() {
+  const f = brief.filters, lim = [];
+  if (f.guests) lim.push(`${f.guests} guest${f.guests > 1 ? "s" : ""}`);
+  if (f.max_price) lim.push(`up to $${f.max_price}/night`);
+  if (f.pets) lim.push("pets welcome");
+  $("#facts").innerHTML = `<span class="city">${esc(cityName(brief.city))}</span>` + lim.map(l => `<span class="dot">·</span><span class="lim">${esc(l)}</span>`).join("");
+  const crit = [...brief.criteria].sort((a, b) => b.must - a.must);
+  $("#wishes").innerHTML = crit.map((c, i) => `<span class="wish ${isPhoto(c) ? "photo" : ""}" style="--i:${i}" title="${esc(c.question || lib(c.id).question)}">${isPhoto(c) ? CAM : ""}${esc(wishLabel(c))}</span>`).join("");
+}
+
+
+// ---- Lanes and tiles ----------------------------------------------------------------------------------------------
+function laneDefs() {
+  return [{ lane: "subq", name: "SubQ", kind: "subq" }, ...brief.models.map((m, i) => ({ lane: `llm${i}`, name: modelName(m), kind: "llm", model: m }))];
+}
+
+function buildLanes(cards, lanes) {
+  const box = $("#lanes"); box.innerHTML = ""; box.style.setProperty("--n", lanes.length);
+  const out = {};
+  lanes.forEach((ln, i) => {
+    const el = document.createElement("section");
+    el.className = "lane " + (ln.kind === "subq" ? "subq" : "") + (lanes.length === 1 ? " solo" : "");
+    if (ln.kind !== "subq") el.style.setProperty("--c", RIVAL_COLORS[(i - 1) % RIVAL_COLORS.length]);
+    el.innerHTML = `
+      <div class="lane-head"><div class="who">${ln.kind === "subq" ? `<img src="/static/symbol-color.svg" alt="">` : `<span class="sw"></span>`}<span>${esc(ln.name)}</span></div>
+        <span class="slot"></span><span class="status">Ready</span></div>
+      <div class="metrics">
+        <div class="m"><div class="k">Time</div><div class="v t">0.0<small>s</small></div></div>
+        <div class="m"><div class="k">Cost</div><div class="v c">$0</div></div>
+        <div class="m"><div class="k">Checked</div><div class="v n">0<small>/${cards.length}</small></div></div>
+      </div>
+      <div class="bar"><i></i></div>
+      <div class="gridbox"><div class="grid">${cards.map(tileHTML).join("")}</div></div>`;
+    box.appendChild(el);
+    const tiles = {};
+    el.querySelectorAll(".tile").forEach(t => tiles[t.dataset.id] = t);
+    out[ln.lane] = { ...ln, el, tiles, results: {}, count: 0, matches: 0, done: false, total: cards.length };
+  });
+  for (const l of Object.values(out)) gridObserver.observe(l.el.querySelector(".gridbox"));
+  return out;
+}
+
+function tileHTML(c) {
+  const type = (c.property_type || c.room_type || "").replace(/^Entire /, "").replace(/^Private room in .*/, "Private room");
+  const facts = [type && type[0].toUpperCase() + type.slice(1), c.bedrooms && `${c.bedrooms} BR`, c.rating && `★${c.rating.toFixed(2)}`].filter(Boolean);
+  return `<div class="tile" data-id="${esc(c.id)}" title="${esc(c.name)}">
+    <div class="ph" style="background-image:url('${esc(c.picture)}')"></div>
+    <div class="info"><div class="nm">${esc(c.name)}</div><div class="meta"><b>$${c.price}</b> · ${esc(facts.join(" · "))}</div>${c.blurb ? `<div class="bl">${esc(c.blurb)}</div>` : ""}</div>
+  </div>`;
+}
+
+const gridObserver = new ResizeObserver(() => fitGrids());
+
+// Lay out each lane's cards in 6 columns (24 listings make 4 rows) that fill the card area without scrolling: a
+// full-width photo with the text below it. Show the name, facts and two lines of description if they can be read, then
+// the name and facts alone, then bare photos. Photos are as tall as the row allows, up to square.
+const GAP = 8, COLS = 6;
+const LAYOUTS = [{ ih: 72, min: 150 }, { ih: 42, min: 110 }, { ih: 0, min: 0 }];
+function fitGrids() {
+  for (const box of document.querySelectorAll(".gridbox")) {
+    const grid = box.querySelector(".grid"), n = grid.children.length;
+    if (!n) continue;
+    const cs = getComputedStyle(box);
+    const W = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const H = innerWidth >= 700 ? box.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) : W * 1.6;
+    const cols = Math.min(COLS, n), rows = Math.ceil(n / cols);
+    const tw = (W - GAP * (cols - 1)) / cols, rh = (H - GAP * (rows - 1)) / rows;
+    const opt = LAYOUTS.find(o => tw >= o.min && rh - o.ih >= tw / 3);  // keep the photo no flatter than 3:1
+    const ph = Math.min(rh - opt.ih, tw);
+    const set = (k, v) => grid.style.setProperty(k, v);
+    set("--gap", GAP + "px"); set("--cols", cols); set("--ih", opt.ih + "px");
+    set("--tw", Math.floor(tw) + "px"); set("--phh", Math.floor(ph) + "px");
+    grid.classList.toggle("blurbs", opt.ih === 72); grid.classList.toggle("bare", opt.ih === 0);
+  }
+}
+
+function setStatus(l, text, cls) { const s = l.el.querySelector(".status"); s.textContent = text; s.className = "status " + (cls || ""); }
+const setV = (l, k, html) => { l.el.querySelector(".v." + k).innerHTML = html; };
+const secs = v => `${v.toFixed(1)}<small>s</small>`;
+const laneCost = (l, v) => money(v);
+
+// ---- Ranking ------------------------------------------------------------------------------------------------------
+function ranked(l) {
+  return Object.entries(l.results).filter(([, r]) => r).sort((a, b) => (b[1].met - a[1].met) || (b[1].score - a[1].score)).map(([id, r]) => ({ id, ...r }));
+}
+
+// ---- Running ------------------------------------------------------------------------------------------------------
+function request() {
+  return { city: brief.city, filters: brief.filters, criteria: brief.criteria, models: brief.models, listings: brief.listings };
+}
+
+async function loadPreview() {
+  try {
+    const r = await (await fetch("/api/estimate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request()) })).json();
+    if (!r.cards) throw new Error(r.detail || "No preview");
+    preview = r;
+    const llm = Object.entries(r.lanes).filter(([k]) => k !== "subq").reduce((s, [, v]) => s + v.cost, 0);
+    $("#estimate").textContent = `${r.listings} of ${r.eligible} listings that pass the limits · ${r.criteria} wishes` + (brief.models.length ? ` · est. LLM spend ${money(llm)}` : "");
+    hint("");
+  } catch (e) { $("#estimate").textContent = ""; hint(String(e.message || e)); }
+  renderBrief();
+  if (!controller) { run = null; buildLanes(preview.cards, laneDefs()); fitGrids(); }
+}
+
+let previewTimer = null;
+function changed() { renderBrief(); clearTimeout(previewTimer); previewTimer = setTimeout(loadPreview, 220); }
+
+function setRunning(on) {
+  const b = $("#run");
+  b.classList.toggle("stop", on); b.classList.toggle("go", !on); b.classList.remove("ready");
+  b.querySelector("span").textContent = on ? "Stop" : "Run again";
+  b.querySelector("svg").innerHTML = on ? `<rect x="6" y="6" width="12" height="12" rx="1"/>` : `<path d="M7 4.5v15l12.5-7.5z"/>`;
+}
+
+async function startRun() {
+  if (controller) return;
+  if (!brief.criteria.length) { openDrawer(); hint("Add at least one wish."); return; }
+  closeDrawer();
+  controller = new AbortController(); setRunning(true);
+  try {
+    const resp = await fetch("/api/run", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request()), signal: controller.signal });
+    if (!resp.ok) { const e = await resp.json().catch(() => ({})); throw new Error(e.detail || `HTTP ${resp.status}`); }
+    const reader = resp.body.pipeThrough(new TextDecoderStream()).getReader();
+    let buf = "";
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += value;
+      let nl;
+      while ((nl = buf.indexOf("\n")) >= 0) {
+        const line = buf.slice(0, nl).trim(); buf = buf.slice(nl + 1);
+        if (line) handle(JSON.parse(line));
+      }
+    }
+  } catch (e) {
+    if (e.name === "AbortError") { markUnfinished("Stopped"); }
+    else { markUnfinished("Error"); toast(`Couldn't run: ${e.message}`); }
+  } finally { controller = null; setRunning(false); }
+}
+
+function markUnfinished(text) { if (run) for (const l of Object.values(run.lanes)) if (!l.done) { l.done = true; l.el.classList.remove("live"); setStatus(l, text, "err"); } }
+
+function handle(m) {
+  if (m.type === "run_started") {
+    run = { listings: Object.fromEntries(m.listings.map(l => [l.id, l])), criteria: m.criteria, t0: performance.now(), subqDone: null,
+            photos: m.photos, total: m.listings.length };
+    setTimer("Analyzing", 0, false);
+    run.lanes = buildLanes(m.listings.slice(0, m.shown || m.listings.length), m.lanes);
+    fitGrids();  // lay out the new cards now, not a frame later, so they never flash at the default size
+    for (const l of Object.values(run.lanes)) l.total = m.listings.length;
+    for (const l of Object.values(run.lanes)) { l.el.classList.add("live"); setStatus(l, "Checking", "live"); }
+    requestAnimationFrame(tick);
+    return;
+  }
+  if (m.type === "preparing") return;
+  if (m.type === "error") { if (m.lane && run?.lanes[m.lane]) setStatus(run.lanes[m.lane], "Error", "err"); toast(m.text); return; }
+  if (m.type === "summary") return;
+  if (m.type === "run_finished" || !run) return;
+  const l = run.lanes[m.lane]; if (!l) return;
+  if (m.type === "start") { const t = l.tiles[m.listing]; if (t) { t.classList.add("scan"); t.scanStart = performance.now(); } return; }
+  if (m.type === "result") {
+    const t = l.tiles[m.listing];
+    l.count++; l.results[m.listing] = m.ok ? m : null;
+    const match = m.ok && m.met && m.score >= MATCH;
+    if (match) l.matches++;
+    if (t) {
+      // Show the verdict once the single sweep has finished (or right away if the answer came after it).
+      const r = run, el = performance.now() - (t.scanStart ?? performance.now());
+      const wait = Math.max(0, SCAN_PASS_MS - el);
+      l.pending = (l.pending || 0) + 1;
+      setTimeout(() => {
+        if (run !== r) return;
+        t.classList.remove("scan"); t.classList.add(m.ok ? (match ? "yes" : "no") : "fail");
+        if (--l.pending === 0 && l.settleWaiting) settle(l);
+      }, wait);
+    }
+    l.el.querySelector(".bar i").style.width = (100 * l.count / l.total) + "%";
+    setV(l, "n", `${l.count}<small>/${l.total}</small>`);
+    setV(l, "c", laneCost(l, m.lane_cost ?? 0));
+    if (m.retries && l.kind === "subq" && !run.warned) { run.warned = true; toast("SubQ is being rate-limited. Wait a minute before the next run."); }
+    return;
+  }
+  if (m.type === "lane_done") {
+    l.done = true; l.totals = m; l.el.classList.remove("live");
+    setV(l, "t", secs(m.wall)); setV(l, "c", laneCost(l, m.cost));
+    l.el.querySelector(".slot").innerHTML = "";
+    setStatus(l, m.failures ? `Done · ${m.failures} failed` : "Done", m.failures ? "err" : "ok");
+    if (l.kind === "subq") {
+      run.subqDone = performance.now(); setTimer("Analyzed in", m.wall, true);
+    }
+    if (l.pending) l.settleWaiting = true; else settle(l);
+  }
+}
+
+// When a lane finishes, fade out the listings that didn't match, then move the matches into a carousel, best first:
+// three across and centered, with arrows (or a scroll) to see the rest. Each card grows from where it sat (FLIP).
+const FADE_MS = 320, MOVE_MS = 800;
+const HEART = `<svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>`;
+const ARROW = d => `<svg viewBox="0 0 24 24"><path d="${d}"/></svg>`;
+function settle(l) {
+  const r = run, tiles = Object.values(l.tiles), box = l.el.querySelector(".gridbox"), grid = box.querySelector(".grid");
+  // The matches across every listing analyzed, best first. Those on the grid fly from their spot; the rest (analyzed but
+  // not shown) get a card built here that fades into its place.
+  const keep = ranked(l).filter(x => x.ok && x.met && x.score >= MATCH).map(x => {
+    if (l.tiles[x.id]) return l.tiles[x.id];
+    const tmp = document.createElement("div"); tmp.innerHTML = tileHTML(run.listings[x.id]).trim();
+    const t = tmp.firstChild; t.classList.add("yes", "fresh"); return t;
+  });
+  const out = tiles.filter(t => !keep.includes(t));
+  out.forEach(t => t.classList.add("fading"));
+  setTimeout(() => {
+    if (run !== r) return;
+    const before = new Map(keep.filter(t => t.isConnected).map(t => [t, t.getBoundingClientRect()]));
+    // The grid's card size and text settings, which the cards keep once they leave the grid.
+    const gs = grid.style, size = { w: tiles[0]?.offsetWidth || 0, h: tiles[0]?.offsetHeight || 0 };
+    const car = document.createElement("div");
+    car.className = "carousel";
+    car.innerHTML = `<div class="track"></div>
+      <button class="cnav prev" type="button" aria-label="Previous matches">${ARROW("M15 5l-7 7 7 7")}</button>
+      <button class="cnav next" type="button" aria-label="More matches">${ARROW("M9 5l7 7-7 7")}</button>`;
+    const track = car.querySelector(".track");
+    track.classList.add("moving");
+    track.classList.toggle("noblurbs", !grid.classList.contains("blurbs"));
+    for (const k of ["--tw", "--phh", "--ih"]) track.style.setProperty(k, gs.getPropertyValue(k));
+    keep.forEach((t, i) => {
+      t.classList.add("settled");
+      t.querySelector(".ph").insertAdjacentHTML("beforeend", `<span class="rank${i ? "" : " lead"}">${i + 1}</span>
+        <button class="fav" type="button" aria-pressed="false" aria-label="Save to favorites">${HEART}</button>`);
+      const slot = document.createElement("div"); slot.className = "cslot";
+      slot.appendChild(t); track.appendChild(slot);
+    });
+    grid.hidden = true;
+    box.appendChild(car);
+    track.scrollLeft = 0;
+    // Scale each card to fill its slot, now and whenever the strip changes size.
+    const sizeSlots = () => {
+      const k = (track.querySelector(".cslot")?.offsetWidth || size.w) / size.w;
+      track.querySelectorAll(".cslot").forEach(sl => { sl.style.height = size.h * k + "px"; sl.firstChild.style.transform = `scale(${k})`; });
+      return k;
+    };
+    const scale = sizeSlots();
+    new ResizeObserver(sizeSlots).observe(track);
+    requestAnimationFrame(() => track.classList.add("hearts"));  // after a frame, so the swap animates
+    // Each card grows from where it sat to its slot, on an even ease-in-out. Same layout throughout, so no jump.
+    const moves = keep.map((t, i) => {
+      const was = before.get(t), now = t.getBoundingClientRect();
+      if (!was) return t.animate([{ opacity: 0, transform: `translateY(24px) scale(${scale * .92})` }, { opacity: 1, transform: `scale(${scale})` }],
+        { duration: MOVE_MS, delay: Math.min(i, 3) * 40 + 120, easing: "cubic-bezier(.2, .9, .3, 1)", fill: "backwards" }).finished;
+      const dx = (was.left - now.left) / Z, dy = (was.top - now.top) / Z;
+      return t.animate([{ transform: `translate(${dx}px, ${dy}px) scale(1)` }, { transform: `scale(${scale})` }],
+        { duration: MOVE_MS, delay: Math.min(i, 3) * 40, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "backwards" }).finished;
+    });
+    Promise.all(moves).then(() => { if (run === r) { track.classList.remove("moving"); track.scrollLeft = 0; nav(); } }, () => {});
+    track.addEventListener("click", e => {
+      const b = e.target.closest(".fav"); if (!b) return;
+      const on = b.getAttribute("aria-pressed") !== "true";
+      b.setAttribute("aria-pressed", on); b.setAttribute("aria-label", on ? "Remove from favorites" : "Save to favorites");
+      b.classList.remove("burst", "unpop"); void b.offsetWidth;  // restart the animation on quick repeat clicks
+      b.classList.add(on ? "burst" : "unpop");
+      b.addEventListener("animationend", ev => { if (ev.target === b) b.classList.remove("burst", "unpop"); }, { once: true });
+    });
+    const step = () => (track.querySelector(".cslot")?.offsetWidth || 0) + 60;
+    const nav = () => {
+      car.querySelector(".prev").disabled = track.scrollLeft <= 8;
+      car.querySelector(".next").disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 8;
+    };
+    car.querySelector(".prev").onclick = () => track.scrollBy({ left: -step() });
+    car.querySelector(".next").onclick = () => track.scrollBy({ left: step() });
+    track.addEventListener("scroll", nav, { passive: true });
+    // A plain mouse wheel scrolls the carousel sideways.
+    track.addEventListener("wheel", e => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { track.scrollLeft += e.deltaY; e.preventDefault(); } }, { passive: false });
+    nav();
+  }, out.length ? FADE_MS : 0);
+}
+
+function setTimer(label, secs, done) {
+  const t = $("#timer"); t.hidden = false; t.classList.toggle("done", done);
+  $("#timerK").textContent = label; $("#timerV").innerHTML = `${secs.toFixed(2)}<small>s</small>`;
+}
+
+function tick() {
+  if (!run || !controller) return;
+  const now = performance.now(), el = (now - run.t0) / 1000;
+  if (!run.subqDone) setTimer("Analyzing", el, false);
+  for (const l of Object.values(run.lanes)) {
+    if (l.done) continue;
+    setV(l, "t", secs(el));
+    if (run.subqDone && l.kind !== "subq") {
+      const slot = l.el.querySelector(".slot");
+      const behind = ((now - run.subqDone) / 1000).toFixed(1);
+      if (!slot.firstChild) slot.innerHTML = `<span class="behind"></span>`;
+      slot.firstChild.textContent = `+${behind}s behind`;
+    }
+  }
+  requestAnimationFrame(tick);
+}
+
+let toastTimer = null;
+function toast(t) {
+  document.querySelector(".toast")?.remove();
+  const el = document.createElement("div"); el.className = "toast"; el.textContent = t;
+  $("#race").appendChild(el); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.remove(), 6000);
+}
+
+// ---- The drawer ---------------------------------------------------------------------------------------------------
+function syncDrawer() {
+  $("#city").value = brief.city;
+  document.querySelectorAll("#presets .chip").forEach(b => b.classList.toggle("on", b.dataset.p === brief.preset));
+  $("#guests").value = brief.filters.guests || ""; $("#maxPrice").value = brief.filters.max_price || ""; $("#pets").checked = !!brief.filters.pets;
+  document.querySelectorAll("#models input").forEach(i => i.checked = i.value ? brief.models.includes(i.value) : !brief.models.length);
+  $("#count").value = brief.listings; $("#countLabel").textContent = brief.listings;
+  renderCriteria();
+}
+
+function renderCriteria() {
+  $("#criteria").innerHTML = brief.criteria.map((c, i) => `<span class="crit ${c.must ? "is-must" : ""} ${isPhoto(c) ? "photo" : ""}" title="${esc(c.question || lib(c.id).question)}">
+    <span class="lbl">${isPhoto(c) ? CAM : ""}${esc(wishLabel(c))}</span><button type="button" class="mt" data-i="${i}">must</button><button type="button" class="x" data-x="${i}" aria-label="Remove">×</button></span>`).join("")
+    || `<span class="estimate">Add at least one wish.</span>`;
+  const used = new Set(brief.criteria.map(c => c.id));
+  $("#libPick").innerHTML = `<option value="">Add a wish…</option>` + config.library.filter(l => !used.has(l.id)).map(l => `<option value="${l.id}">${l.photo ? "📷 " : ""}${esc(l.label)}</option>`).join("");
+  document.querySelectorAll("#criteria .mt").forEach(b => b.addEventListener("click", () => { const c = brief.criteria[b.dataset.i]; c.must = !c.must; renderCriteria(); changed(); }));
+  document.querySelectorAll("#criteria .x").forEach(b => b.addEventListener("click", () => { brief.criteria.splice(b.dataset.x, 1); renderCriteria(); changed(); }));
+}
+
+$("#libPick").addEventListener("change", e => { if (e.target.value) { brief.criteria.push({ id: e.target.value, must: false }); renderCriteria(); changed(); } });
+$("#addCustom").addEventListener("click", () => {
+  const q = $("#custom").value.trim(); if (!q) return;
+  brief.criteria.push({ question: q, label: q.replace(/^(is|are|does|do|can|has|have) (there |the photo show |the listing have )?/i, "").replace(/\?$/, "").slice(0, 40), must: false, photo: /photo/i.test(q) });
+  $("#custom").value = ""; renderCriteria(); changed();
+});
+$("#custom").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("#addCustom").click(); } });
+$("#city").addEventListener("change", e => { brief.city = e.target.value; changed(); });
+$("#guests").addEventListener("input", e => { brief.filters.guests = +e.target.value || 0; brief.preset = null; changed(); });
+$("#maxPrice").addEventListener("input", e => { brief.filters.max_price = +e.target.value || 0; brief.preset = null; changed(); });
+$("#pets").addEventListener("change", e => { brief.filters.pets = e.target.checked; brief.preset = null; changed(); });
+$("#count").addEventListener("input", e => { brief.listings = +e.target.value; $("#countLabel").textContent = brief.listings; changed(); });
+$("#models").addEventListener("change", e => {
+  brief.models = e.target.value ? [e.target.value] : []; changed();
+});
+
+function openDrawer() {
+  syncDrawer();
+  const d = $("#drawer"), b = $("#brief");
+  if (innerWidth >= 700) d.style.top = (b.offsetTop + b.offsetHeight + 8) + "px"; else d.style.top = "";
+  $("#scrim").hidden = false; d.hidden = false;
+}
+function closeDrawer() { $("#drawer").hidden = true; $("#scrim").hidden = true; }
+$("#tweak").addEventListener("click", () => $("#drawer").hidden ? openDrawer() : closeDrawer());
+$("#closeDrawer").addEventListener("click", closeDrawer);
+$("#scrim").addEventListener("click", closeDrawer);
+$("#drawer").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (controller) { controller.abort(); while (controller) await new Promise(r => setTimeout(r, 30)); }
+  startRun();
+});
+$("#run").addEventListener("click", () => controller ? controller.abort() : startRun());
+addEventListener("keydown", e => {
+  if (e.key === "Escape" && !$("#drawer").hidden) closeDrawer();
+  if (e.key === "Enter" && e.target === document.body && !controller) startRun();
+});
+
+// Frame mode: scale so the window's shorter side is 1080px, then stretch the frame to fill the window edge to edge.
+function fit() {
+  const square = innerWidth >= 700;
+  Z = square ? Math.min(innerWidth, innerHeight) / 1080 : 1;
+  for (const el of document.querySelectorAll(".wrap")) {
+    el.style.zoom = square ? Z : "";
+    el.style.width = square ? innerWidth / Z + "px" : "";
+    el.style.height = square ? innerHeight / Z + "px" : "";
+  }
+  fitGrids();
+}
+addEventListener("resize", fit);
+fit();
+init().catch(e => toast(`Couldn't reach the server: ${e.message || e}`));
+</script>
+</body>
+</html>

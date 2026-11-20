@@ -1,0 +1,24 @@
+{
+  "customer": "Avery Chen",
+  "days": 45,
+  "tokens": 7173,
+  "wall_s": 0.63,
+  "docs": 14,
+  "action": "Approve refund",
+  "p": 0.996,
+  "section": "Customer-specific refund window",
+  "evidence": "within sixty (60) days",
+  "lines": [
+    "Refund handbook, 2024",
+    "Draft handbook revision",
+    "Subscription terms",
+    "Refund handbook, 2026",
+    "Expired pilot amendment",
+    "Halcyon Clinics agreement",
+    "Copperlane agreement",
+    "Copperlane amendment",
+    "Purchase record",
+    "Support thread",
+    "Brightline agreement"
+  ]
+}

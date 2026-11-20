@@ -1,0 +1,22 @@
+[project]
+name = "screen-scout"
+version = "0.1.0"
+description = "Age-appropriate content checker for streaming shows and YouTube videos, powered by SubQ Snap."
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.32",
+    "python-dotenv>=1.0",
+    "youtube-transcript-api>=1.0",
+    "beautifulsoup4>=4.12",
+    "rich>=13.7",
+    "streamlit>=1.37",
+    "pillow>=10.0",
+]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["screen_scout*"]

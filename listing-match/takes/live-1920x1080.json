@@ -1,0 +1,38 @@
+{
+  "rival": "",
+  "size": [
+    1920,
+    1080
+  ],
+  "run_start_s": 7.27,
+  "lane_finished_s": {
+    "subq": 8.52
+  },
+  "video_end_s": 12.03,
+  "lanes": {
+    "subq": {
+      "name": "SubQ",
+      "kind": "subq",
+      "totals": {
+        "type": "lane_done",
+        "lane": "subq",
+        "name": "SubQ",
+        "model": "subq-snap-latest",
+        "kind": "subq",
+        "done": 24,
+        "failures": 0,
+        "wall": 1.196,
+        "p50": 0.874,
+        "p95": 1.177,
+        "input_tokens": 32212,
+        "output_tokens": 0,
+        "cost": 0.002899,
+        "retries": 0,
+        "error": null
+      },
+      "matches": 10,
+      "total": 24
+    }
+  },
+  "recorded": "2026-11-19 22:40"
+}

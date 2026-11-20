@@ -1,0 +1,40 @@
+{
+  "name": "policy-contradiction-check",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Policy Contradiction Check — a SubQ Snap demo. Check an item against a long policy, watch Snap walk the policy's tree to the clause that governs it, and see the verdict with the clause quoted beside it. Bring your own use case.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "index": "tsx --env-file-if-exists=.env.local scripts/index-rulebook.ts",
+    "check-samples": "tsx --env-file=.env.local scripts/check-samples.ts",
+    "generate:marketing": "tsx usecases/marketing/source/generate.ts"
+  },
+  "dependencies": {
+    "framer-motion": "^12.23.24",
+    "mammoth": "^1.13.0",
+    "next": "16.3.8",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
+    "unpdf": "^1.8.1",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.8",
+    "tailwindcss": "^4",
+    "tsx": "^4.20.5",
+    "typescript": "^5",
+    "vitest": "^3.2.4"
+  }
+}

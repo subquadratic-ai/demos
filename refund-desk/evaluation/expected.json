@@ -1,0 +1,120 @@
+{
+  "evaluationDate": "2026-10-16",
+  "note": "Validation fixture only. The application must not send this file to SubQ.",
+  "cases": [
+    {
+      "id": "purchase-15-standard",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AGR-1042-STD-WINDOW",
+      "elapsedDays": 15
+    },
+    {
+      "id": "purchase-45-standard",
+      "expectedAction": "decline_refund",
+      "expectedGoverningSectionId": "SEC-AGR-1042-STD-WINDOW",
+      "elapsedDays": 45
+    },
+    {
+      "id": "purchase-45-agreement-exception",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AGR-1042-EX-WINDOW",
+      "elapsedDays": 45,
+      "applicableExceptionSectionId": "SEC-AGR-1042-EX-WINDOW",
+      "afterRemovingApplicableException": {
+        "expectedAction": "decline_refund",
+        "expectedGoverningSectionId": "SEC-POL-REFUND-WINDOW"
+      }
+    },
+    {
+      "id": "purchase-date-missing",
+      "expectedAction": "request_information",
+      "expectedGoverningSectionId": "insufficient_evidence",
+      "elapsedDays": null
+    },
+    {
+      "id": "conflicting-agreements",
+      "expectedAction": "escalate",
+      "expectedGoverningSectionId": "conflicting_evidence",
+      "elapsedDays": 45
+    },
+    {
+      "id": "other-customer-exception",
+      "expectedAction": "decline_refund",
+      "expectedGoverningSectionId": "SEC-AGR-1042-STD-WINDOW",
+      "elapsedDays": 45,
+      "otherCustomerExceptionSectionId": "SEC-AMD-2208-WINDOW"
+    },
+    {
+      "id": "renewal-8-days",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AGR-1184-WINDOW",
+      "elapsedDays": 8
+    },
+    {
+      "id": "purchase-31-standard",
+      "expectedAction": "decline_refund",
+      "expectedGoverningSectionId": "SEC-AGR-1042-STD-WINDOW",
+      "elapsedDays": 31
+    },
+    {
+      "id": "active-amendment-90",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AMD-1042-90-WINDOW",
+      "elapsedDays": 70
+    },
+    {
+      "id": "handbook-only-recent",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-POL-REFUND-WINDOW",
+      "elapsedDays": 12
+    },
+    {
+      "id": "future-amendment",
+      "expectedAction": "decline_refund",
+      "expectedGoverningSectionId": "SEC-AGR-1042-STD-WINDOW",
+      "elapsedDays": 45
+    },
+    {
+      "id": "halcyon-own-agreement",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AGR-3310-WINDOW",
+      "elapsedDays": 50
+    },
+    {
+      "id": "copperlane-refund",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AMD-2208-WINDOW",
+      "elapsedDays": 45
+    },
+    {
+      "id": "redwood-recent",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AGR-4401-WINDOW",
+      "elapsedDays": 14
+    },
+    {
+      "id": "fieldnote-late",
+      "expectedAction": "decline_refund",
+      "expectedGoverningSectionId": "SEC-AGR-4402-WINDOW",
+      "elapsedDays": 57
+    },
+    {
+      "id": "harbor-missing-date",
+      "expectedAction": "request_information",
+      "expectedGoverningSectionId": "insufficient_evidence",
+      "elapsedDays": null
+    },
+    {
+      "id": "sable-window",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AGR-4404-WINDOW",
+      "elapsedDays": 62
+    },
+    {
+      "id": "kindling-renewal",
+      "expectedAction": "approve_refund",
+      "expectedGoverningSectionId": "SEC-AGR-4405-WINDOW",
+      "elapsedDays": 10
+    }
+  ]
+}

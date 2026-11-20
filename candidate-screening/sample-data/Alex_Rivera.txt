@@ -1,0 +1,26 @@
+Alex Rivera
+Principal Software Engineer
+
+Summary
+Payments infrastructure specialist with 12 years of backend experience,
+including 6 years leading money-movement systems at scale.
+
+Experience
+Principal Engineer — Global Payments Processor (2017–present)
+- Technical lead for authorization, capture, and settlement platforms moving
+  $40B+ annually across Go and Java services
+- Architected the idempotency and ledgering layer; set the company standard for
+  reconciliation and exactly-once settlement
+- Owned Kafka-based event pipelines and the on-call practices for 20+ services
+- Designed Postgres schemas and partitioning strategy for the core ledger
+- Mentored 15+ engineers; ran the backend architecture review board
+
+Senior Engineer — Fintech Startup (2014–2017)
+- Built the first version of the payments API and webhook delivery system
+
+Skills
+Go, Java, Postgres, Kafka, Kubernetes, Terraform, gRPC, idempotency,
+reconciliation, ledgering, distributed systems
+
+Education
+M.S. Computer Science
