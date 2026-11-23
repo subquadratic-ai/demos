@@ -1,0 +1,15 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+data/
+out/
+frames_*/
+*.egg-info/
+build/
+dist/
+.DS_Store
+takes/*.webm

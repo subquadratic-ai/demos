@@ -1,0 +1,25 @@
+Senior Backend Engineer — Payments Platform
+
+About the role
+We are hiring a Senior Backend Engineer to work on our payments platform. You
+will design and operate high-throughput services that move money reliably, own
+critical APIs end to end, and mentor mid-level engineers.
+
+Must-have requirements
+- 5+ years building production backend services
+- Strong experience with a typed backend language (Go, Java, or TypeScript/Node)
+- Designed and operated distributed systems handling real production traffic
+- Solid grasp of relational databases (Postgres/MySQL), schema design, and
+  transactional correctness
+- Experience with asynchronous processing / message queues (Kafka, SQS, etc.)
+- Comfortable owning on-call for services you build
+
+Nice to have
+- Prior work in payments, fintech, or other high-compliance domains
+- Experience with idempotency, reconciliation, and ledgering
+- Exposure to Kubernetes and infrastructure-as-code
+
+What you'll do
+- Design APIs and data models for new payment flows
+- Improve reliability and latency of existing services
+- Partner with product and compliance on new features

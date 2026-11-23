@@ -1,0 +1,31 @@
+{
+  "size": [
+    1080,
+    1080
+  ],
+  "marks_s": {
+    "start": 1.402,
+    "pass1": 2.908,
+    "done": 6.097,
+    "read": 8.7,
+    "end": 8.92
+  },
+  "recorded": "2026-11-20 07:52",
+  "files": 89,
+  "repo_lines": 23149,
+  "kept": [
+    "src/maybe.ts",
+    "src/task.ts",
+    "src/result.ts"
+  ],
+  "ranges": 4,
+  "pass1": {
+    "seconds": 1.45,
+    "tokens": 245996
+  },
+  "pass2": {
+    "seconds": 1.42,
+    "tokens": 95659
+  },
+  "packet_lines": 636
+}

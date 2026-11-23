@@ -1,0 +1,4 @@
+.env
+takes/*.webm
+frames_*/
+__pycache__/

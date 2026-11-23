@@ -1,0 +1,6 @@
+repo/
+.env
+last_run.json
+takes/*.webm
+frames_*/
+__pycache__/

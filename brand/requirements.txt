@@ -1,0 +1,7 @@
+# Shared by the demos that import brand/ (live_cut.py, snap_logo.py). Tested on Python 3.12.
+# Rendering also needs ffmpeg: on PATH, or its path in the FFMPEG environment variable.
+matplotlib>=3.8
+numpy>=1.24
+pillow>=9.1
+# Only for record_live.py (recording a page). After installing: python -m playwright install chromium
+playwright>=1.40

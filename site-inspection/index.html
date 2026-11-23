@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Site inspection</title>
+<style>
+  @font-face { font-family: Plex; src: url(/fonts/IBMPlexSans-Regular.ttf); font-weight: 400; }
+  @font-face { font-family: Plex; src: url(/fonts/IBMPlexSans-Medium.ttf); font-weight: 500; }
+  @font-face { font-family: Plex; src: url(/fonts/IBMPlexSans-SemiBold.ttf); font-weight: 600; }
+  @font-face { font-family: PlexMono; src: url(/fonts/IBMPlexMono-Regular.ttf); font-weight: 400; }
+  @font-face { font-family: PlexMono; src: url(/fonts/IBMPlexMono-Medium.ttf); font-weight: 500; }
+  :root { --bg: #f2f0eb; --card: #fff; --ink: #151412; --muted: #78736b; --line: #e3dfd6; --navy: #233a7a;
+          --green: #2f7d3a; --red: #c0392b; --amber: #e8a33d; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font-family: Plex, system-ui, sans-serif; }
+  body { display: flex; flex-direction: column; padding: 36px 52px; gap: 18px; overflow: hidden; }
+  header { display: flex; justify-content: space-between; align-items: flex-end; }
+  .eyebrow { font: 500 13px PlexMono, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { margin: 6px 0 0; font-size: 40px; font-weight: 600; letter-spacing: -.01em; }
+  .right { display: flex; align-items: center; gap: 18px; }
+  .clock { font: 500 15px PlexMono, monospace; color: var(--muted); }
+  .clock b { color: var(--ink); font-size: 22px; font-weight: 500; }
+  button { font: 500 17px Plex, sans-serif; color: #fff; background: var(--navy); border: 0; border-radius: 999px; padding: 13px 26px; cursor: pointer; }
+  button:disabled { opacity: .55; }
+  main { flex: 1; min-height: 0; display: grid; grid-template-columns: 2.2fr 1fr; gap: 18px; }
+  .photos { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 14px; min-height: 0; }
+  .ph { position: relative; border-radius: 12px; overflow: hidden; background: #ddd center/cover no-repeat; box-shadow: 0 0 0 1px var(--line); transition: box-shadow .35s; }
+  .ph.scan::after { content: ""; position: absolute; left: 0; right: 0; height: 30%; top: -30%; background: linear-gradient(180deg, transparent, rgba(255,255,255,.55), transparent); animation: scan 1.2s linear infinite; animation-delay: var(--d); }
+  @keyframes scan { to { top: 100%; } }
+  .ph.flag { box-shadow: 0 0 0 5px var(--red); }
+  .ph.ok { box-shadow: 0 0 0 5px var(--green); }
+  .tag { position: absolute; left: 14px; right: 14px; bottom: 14px; border-radius: 10px; padding: 12px 14px; color: #fff; display: none; flex-direction: column; gap: 3px; backdrop-filter: blur(2px); }
+  .tag.in { display: flex; animation: pop .35s ease-out; }
+  @keyframes pop { from { transform: translateY(10px); opacity: 0; } }
+  .flag .tag { background: rgba(176, 44, 32, .92); }
+  .ok .tag { background: rgba(38, 112, 52, .9); }
+  .tag .v { font-size: 22px; font-weight: 600; }
+  .tag .d { font: 400 14px PlexMono, monospace; opacity: .92; }
+  .num { position: absolute; top: 12px; left: 12px; font: 500 14px PlexMono, monospace; background: rgba(0,0,0,.6); color: #fff; padding: 3px 9px; border-radius: 6px; }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden; }
+  h2 { margin: 0; font-size: 18px; font-weight: 600; display: flex; justify-content: space-between; align-items: baseline; }
+  h2 span { font: 400 14px PlexMono, monospace; color: var(--muted); }
+  .rules { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
+  .rule { font-size: 14.5px; padding: 4px 8px; border-radius: 6px; color: #4a463f; transition: background .3s, color .3s; }
+  .rule b { font: 500 13px PlexMono, monospace; color: var(--muted); margin-right: 6px; }
+  .rule.hit { background: #fbe6e3; color: var(--red); font-weight: 600; }
+  .rule.hit b { color: var(--red); }
+  .stats { font: 400 14px PlexMono, monospace; color: var(--muted); display: flex; gap: 22px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 10px; margin-top: auto; }
+  .stats b { color: var(--ink); font-weight: 500; }
+  .credit { font: 400 11px PlexMono, monospace; color: var(--muted); }
+  @media (max-aspect-ratio: 5/4) {
+    body { padding: 24px 26px; gap: 12px; }
+    h1 { font-size: 30px; }
+    main { grid-template-columns: 1fr; grid-template-rows: 1fr auto; gap: 12px; }
+    .photos { gap: 10px; }
+    .panel { padding: 12px 16px; gap: 6px; }
+    .rules { flex-direction: row; flex-wrap: wrap; gap: 4px 6px; max-height: 64px; }
+    .rule { display: none; font-size: 13px; padding: 3px 8px; }
+    .rule.hit { display: block; }
+    .tag .v { font-size: 18px; } .tag .d { font-size: 12.5px; }
+    .tag { left: 10px; right: 10px; bottom: 10px; padding: 9px 11px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div><div class="eyebrow">Site inspection · SubQ Snap</div><h1>Do these photos follow the site rules?</h1></div>
+  <div class="right"><div class="clock" id="clock"></div><button id="run">Inspect photos</button></div>
+</header>
+<main>
+  <div class="photos" id="photos"></div>
+  <section class="panel">
+    <h2>Site rules <span id="ruleMeta"></span></h2>
+    <div class="rules" id="rules"></div>
+    <div class="stats" id="stats"></div>
+    <div class="credit">Photos: NIOSH, public domain, via Wikimedia Commons. Rules: fictional.</div>
+  </section>
+</main>
+<script>
+const $ = s => document.querySelector(s);
+let set, busy = false, t0 = 0, ticking = false;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+function tick() { if (!ticking) return; $("#clock").innerHTML = `Snap checking ${set.photos.length} photos · <b>${((performance.now() - t0) / 1000).toFixed(2)}s</b>`; requestAnimationFrame(tick); }
+
+async function init() {
+  set = await (await fetch("/api/set")).json();
+  $("#ruleMeta").textContent = `${set.site} · ${set.rules.length} rules`;
+  $("#rules").innerHTML = set.rules.map((r, i) => { const [n, ...t] = r.split(" "); return `<div class="rule" id="rule${n.replace(".", "_")}"><b>${n}</b>${t.join(" ")}</div>`; }).join("");
+  $("#photos").innerHTML = set.photos.map((p, i) => `<div class="ph" id="p${i}" style="background-image:url('/photos/${p.file}');--d:${i * .18}s">
+    <span class="num">${i + 1}</span><div class="tag"><div class="v"></div><div class="d"></div></div></div>`).join("");
+  if (new URLSearchParams(location.search).has("autorun")) setTimeout(run, 900);
+}
+
+async function run() {
+  if (busy) return; busy = true; $("#run").disabled = true;
+  document.querySelectorAll(".ph").forEach(p => { p.classList.remove("ok", "flag"); p.classList.add("scan"); p.querySelector(".tag").classList.remove("in"); });
+  document.querySelectorAll(".rule").forEach(r => r.classList.remove("hit"));
+  t0 = performance.now(); ticking = true; tick();
+  let r;
+  try {
+    const resp = await fetch("/api/inspect", { method: "POST" });
+    r = await resp.json(); if (!resp.ok) throw new Error(r.error);
+  } catch (e) { ticking = false; $("#clock").textContent = e.message; busy = false; $("#run").disabled = false; return; }
+  ticking = false;
+  $("#clock").innerHTML = `Inspected in <b>${r.wall_s.toFixed(2)}s</b>`;
+  for (let i = 0; i < r.photos.length; i++) {
+    const x = r.photos[i], el = $("#p" + i);
+    el.classList.remove("scan"); el.classList.add(x.flagged ? "flag" : "ok");
+    el.querySelector(".v").textContent = x.flagged ? "Flag · " + x.rule_short : "Follows the rules";
+    el.querySelector(".d").textContent = `conforms p ${x.conforms.toFixed(2)}` + (x.flagged ? ` · rule p ${x.rule_p.toFixed(2)}` : "");
+    el.querySelector(".tag").classList.add("in");
+    if (x.flagged) { const n = x.rule_short.split(" ")[0].replace(".", "_"); const ru = $("#rule" + n); if (ru) ru.classList.add("hit"); }
+    await sleep(160);
+  }
+  const flags = r.photos.filter(x => x.flagged).length;
+  $("#stats").innerHTML = `<span><b>${r.photos.length}</b> requests at once</span><span><b>${flags}</b> flagged</span><span><b>${r.photos[0].tokens.toLocaleString()}</b> tokens each</span>`;
+  window.__result = r;
+  busy = false; $("#run").disabled = false; $("#run").textContent = "Run again";
+}
+$("#run").addEventListener("click", run);
+addEventListener("keydown", e => { if (e.key === "Enter") run(); });
+init();
+</script>
+</body>
+</html>

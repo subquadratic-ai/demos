@@ -1,0 +1,22 @@
+Dana Okafor
+Software Engineer
+
+Summary
+Backend-leaning full-stack engineer with 3 years of experience. Comfortable
+across the stack, looking to go deeper on distributed systems.
+
+Experience
+Software Engineer — HealthTech Startup (2022–present)
+- Built Java (Spring Boot) services backed by Postgres
+- Added a RabbitMQ-based job queue for report generation
+- Shared on-call rotation for the core API
+- Shipped several customer-facing features end to end
+
+Software Engineer Intern → Junior — Same company (2021–2022)
+- Started on the frontend (React), moved to backend
+
+Skills
+Java, Spring Boot, Postgres, RabbitMQ, React, Docker
+
+Education
+B.S. Computer Science
