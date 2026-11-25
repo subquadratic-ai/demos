@@ -1,0 +1,71 @@
+{
+  "size": [
+    1920,
+    1080
+  ],
+  "marks_s": {
+    "start": 1.431,
+    "first": 2.451,
+    "second_start": 5.795,
+    "second": 6.75,
+    "read": 9.152,
+    "end": 9.36
+  },
+  "recorded": "2026-11-20 11:40",
+  "runs": [
+    {
+      "upload": "Customer upload: photo of a woman in her seventies cycling home from the Saturday farmers market, a basket of peaches and greens on the front of her bike, early morning light.",
+      "seconds": 0.51,
+      "tokens": 7368,
+      "candidates": 250,
+      "on_brand": 0.9997,
+      "top": [
+        {
+          "id": "FW-212",
+          "p": 0.7191,
+          "text": "Photo of a woman in her seventies biking to the farmers market with a basket of produce in soft early-morning light.",
+          "on_brand": true
+        },
+        {
+          "id": "FW-078",
+          "p": 0.074,
+          "text": "Photo of a woman in her seventies biking to the farmers market with a basket of produce in late-summer evening light.",
+          "on_brand": true
+        },
+        {
+          "id": "FW-034",
+          "p": 0.0349,
+          "text": "Photo of a grandmother and her grandson biking home along a river path in soft early-morning light.",
+          "on_brand": true
+        }
+      ]
+    },
+    {
+      "upload": "Customer upload: photo of a woman in her seventies cycling home from the Saturday market, a six-pack of beer and a box of donuts in the basket, early morning light.",
+      "seconds": 0.48,
+      "tokens": 7368,
+      "candidates": 250,
+      "on_brand": 0.0026,
+      "top": [
+        {
+          "id": "FW-212",
+          "p": 0.6318,
+          "text": "Photo of a woman in her seventies biking to the farmers market with a basket of produce in soft early-morning light.",
+          "on_brand": true
+        },
+        {
+          "id": "FW-078",
+          "p": 0.0798,
+          "text": "Photo of a woman in her seventies biking to the farmers market with a basket of produce in late-summer evening light.",
+          "on_brand": true
+        },
+        {
+          "id": "FW-034",
+          "p": 0.0535,
+          "text": "Photo of a grandmother and her grandson biking home along a river path in soft early-morning light.",
+          "on_brand": true
+        }
+      ]
+    }
+  ]
+}

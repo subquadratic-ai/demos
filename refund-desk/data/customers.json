@@ -1,0 +1,83 @@
+[
+  {
+    "id": "NS-CUST-1042",
+    "name": "Avery Chen",
+    "email": "avery.chen@brightline.example",
+    "organization": "Brightline Analytics",
+    "plan": "Lumen Desk Business, annual",
+    "accountStatus": "active",
+    "accountOpened": "2025-11-02"
+  },
+  {
+    "id": "NS-CUST-2208",
+    "name": "Jordan Hale",
+    "email": "jordan.hale@copperlane.example",
+    "organization": "Copperlane Freight",
+    "plan": "Harbor Billing Business, annual",
+    "accountStatus": "active",
+    "accountOpened": "2025-06-18"
+  },
+  {
+    "id": "NS-CUST-3310",
+    "name": "Priya Nair",
+    "email": "priya.nair@halcyon.example",
+    "organization": "Halcyon Clinics",
+    "plan": "Quill Analytics Business, annual",
+    "accountStatus": "active",
+    "accountOpened": "2025-08-09"
+  },
+  {
+    "id": "NS-CUST-1184",
+    "name": "Samira Okonkwo",
+    "email": "samira.okonkwo@northline.example",
+    "organization": "Northline Studio",
+    "plan": "Lumen Desk Team, annual",
+    "accountStatus": "active",
+    "accountOpened": "2026-03-11"
+  },
+  {
+    "id": "NS-CUST-4401",
+    "name": "Mateo Ruiz",
+    "email": "mateo.ruiz@redwood.example",
+    "organization": "Redwood Labs",
+    "plan": "Lumen Desk Team, annual",
+    "accountStatus": "active",
+    "accountOpened": "2026-01-14"
+  },
+  {
+    "id": "NS-CUST-4402",
+    "name": "Lena Vogt",
+    "email": "lena.vogt@fieldnote.example",
+    "organization": "Fieldnote Co",
+    "plan": "Lumen Desk Business, annual",
+    "accountStatus": "active",
+    "accountOpened": "2025-09-03"
+  },
+  {
+    "id": "NS-CUST-4403",
+    "name": "Chris Adeyemi",
+    "email": "chris.adeyemi@harborpine.example",
+    "organization": "Harbor and Pine",
+    "plan": "Lumen Desk Business, annual",
+    "accountStatus": "active",
+    "accountOpened": "2026-02-02"
+  },
+  {
+    "id": "NS-CUST-4404",
+    "name": "Noah Berg",
+    "email": "noah.berg@sable.example",
+    "organization": "Sable Health",
+    "plan": "Quill Analytics Business, annual",
+    "accountStatus": "active",
+    "accountOpened": "2025-12-11"
+  },
+  {
+    "id": "NS-CUST-4405",
+    "name": "Elise Park",
+    "email": "elise.park@kindling.example",
+    "organization": "Kindling Studio",
+    "plan": "Lumen Desk Team, annual",
+    "accountStatus": "active",
+    "accountOpened": "2026-04-19"
+  }
+]

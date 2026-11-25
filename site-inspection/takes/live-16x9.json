@@ -1,0 +1,59 @@
+{
+  "size": [
+    1920,
+    1080
+  ],
+  "marks_s": {
+    "start": 1.745,
+    "done": 6.03,
+    "read": 9.634,
+    "end": 9.84
+  },
+  "recorded": "2026-11-20 18:29",
+  "result": {
+    "photos": [
+      {
+        "file": "construction-workers-not-wearing-fall-protection-equipment.jpg",
+        "conforms": 0.1938,
+        "flagged": true,
+        "rule": "2.1 Six-foot rule. Any worker on a surface with an unprotected side or edge six feet or more above a lower level is protected by a guardrail, a safety net, or a personal fall arrest system (harness and lanyard tied off to a rated anchor).",
+        "rule_p": 0.6478,
+        "seconds": 2.27,
+        "tokens": 2446,
+        "rule_short": "2.1 Six-foot rule"
+      },
+      {
+        "file": "residential-construction-fall-arrest.jpg",
+        "conforms": 0.577,
+        "flagged": false,
+        "rule": null,
+        "rule_p": 0.3442,
+        "seconds": 3.57,
+        "tokens": 3242,
+        "rule_short": null
+      },
+      {
+        "file": "trench-safety-frayed-web-sling.jpg",
+        "conforms": 0.035,
+        "flagged": true,
+        "rule": "6.2 Damaged slings. Web slings with cuts, frayed edges, burns or exposed red core yarns are removed from service.",
+        "rule_p": 0.9378,
+        "seconds": 1.54,
+        "tokens": 2758,
+        "rule_short": "6.2 Damaged slings"
+      },
+      {
+        "file": "trench-safety-ladder.jpg",
+        "conforms": 0.5391,
+        "flagged": false,
+        "rule": "1.1 Hard hats. Everyone on an active site wears a hard hat where there is any overhead work or falling-object hazard.",
+        "rule_p": 0.4553,
+        "seconds": 2.58,
+        "tokens": 3214,
+        "rule_short": "1.1 Hard hats"
+      }
+    ],
+    "wall_s": 3.58,
+    "rules": 23
+  }
+}

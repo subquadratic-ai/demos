@@ -1,0 +1,24 @@
+Priya Sharma
+Senior Software Engineer
+
+Summary
+Backend engineer with 7 years building high-throughput distributed systems,
+most recently on a payments platform processing ~2M transactions/day.
+
+Experience
+Staff Backend Engineer — Stripe-like Payments Co (2021–present)
+- Designed and operated Go microservices for authorization and capture flows
+- Built an idempotency + reconciliation layer that cut duplicate charges by 98%
+- Owned Postgres schema design and transactional correctness for the ledger
+- Primary on-call for 4 production services; drove p99 latency down 40%
+- Used Kafka for async settlement and webhook delivery
+
+Senior Software Engineer — Logistics Startup (2018–2021)
+- Built TypeScript/Node services on AWS (SQS, Lambda, RDS)
+- Led migration from monolith to services; mentored 3 junior engineers
+
+Skills
+Go, TypeScript, Node, Postgres, Kafka, SQS, Kubernetes, Terraform
+
+Education
+B.S. Computer Science

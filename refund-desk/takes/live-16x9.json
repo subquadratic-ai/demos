@@ -1,0 +1,31 @@
+{
+  "size": [
+    1920,
+    1080
+  ],
+  "marks_s": {
+    "start": 1.434,
+    "first": 2.017,
+    "removed": 5.165,
+    "second": 7.141,
+    "read": 10.069,
+    "end": 10.28
+  },
+  "recorded": "2026-11-19 23:12",
+  "actions": [
+    "Approve refund",
+    "Decline refund"
+  ],
+  "response_ms": [
+    536,
+    372
+  ],
+  "input_tokens": [
+    7173,
+    7011
+  ],
+  "cost_usd": [
+    0.000359,
+    0.000351
+  ]
+}

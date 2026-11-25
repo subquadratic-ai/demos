@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+runs/
+.git/
+scripts/
+output/
+takes/
+frames_*/
+render_format.py
+render_live.py
+demo_call.json

@@ -1,0 +1,25 @@
+{
+  "city": "Austin",
+  "preset": "Work trip, with a dog",
+  "listings": 12,
+  "photos": 12,
+  "tokens": 15636,
+  "wall_s": 0.99,
+  "pick": "Sentral on East 6th",
+  "pool": 1.0,
+  "stylish": 0.998,
+  "lines": [
+    "Downtown Treetop Hideaway",
+    "6BR Austin Retreat",
+    "Relax on Riverview",
+    "Sentral on East 6th",
+    "South Lamar, close to downtown",
+    "Trendy Boho Getaway",
+    "East Austin, 3 beds",
+    "A modern spin in Bouldin Creek",
+    "Relax, modern home, 7 beds",
+    "The Austin Oasis",
+    "Sven's Castle Games",
+    "ACL ready, near downtown"
+  ]
+}

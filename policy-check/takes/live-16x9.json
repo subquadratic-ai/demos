@@ -1,0 +1,20 @@
+{
+  "size": [
+    1920,
+    1080
+  ],
+  "marks_s": {
+    "start": 1.796,
+    "done": 7.161,
+    "read": 10.664,
+    "end": 10.88
+  },
+  "recorded": "2026-11-19 23:07",
+  "verdict": "No",
+  "clause": "3.3",
+  "pages": 380,
+  "clauses": 109,
+  "requests": 2,
+  "tokens": 212795,
+  "seconds": 4.08
+}

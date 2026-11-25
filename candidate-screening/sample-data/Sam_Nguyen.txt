@@ -1,0 +1,23 @@
+Sam Nguyen
+Backend Engineer
+
+Summary
+Backend engineer with 5 years building production services. Strong general
+backend skills; no direct payments experience but eager to move into fintech.
+
+Experience
+Backend Engineer — E-commerce Platform (2020–present)
+- Built and operated Java (Spring Boot) services behind a high-traffic storefront
+- Designed Postgres schemas for the orders and inventory domains
+- Added an SQS-based async pipeline for order fulfillment and notifications
+- Shared on-call for the checkout API; handled Black Friday peak load
+- Collaborated with payments vendor integrations (Stripe, PayPal) at the API edge
+
+Backend Engineer — Media Company (2019–2020)
+- Maintained content delivery APIs; some Go services
+
+Skills
+Java, Spring Boot, Go, Postgres, SQS, Docker, REST, distributed systems
+
+Education
+B.S. Computer Science

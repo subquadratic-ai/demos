@@ -1,0 +1,9 @@
+# never commit secrets
+.env
+*.key
+# build scratch
+frames/
+frames_v2/
+frames_*/
+__pycache__/
+*.pyc

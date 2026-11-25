@@ -1,0 +1,47 @@
+[
+  {
+    "id": "it-005",
+    "group": "flags",
+    "clause": "3.3",
+    "hook": "The one-line claim the field opens on",
+    "kind": "ad",
+    "source": "Claim",
+    "text": "Guaranteed 5% return"
+  },
+  {
+    "id": "it-036",
+    "group": "flags",
+    "clause": "3.3",
+    "hook": "Says 'guaranteed' about a variable rate",
+    "kind": "ad",
+    "source": "Landing page · Sublinear Save hero",
+    "text": "Sublinear Save: guaranteed 5.2% returns, whatever the market does. Open in four minutes, no minimum balance, withdraw whenever you like."
+  },
+  {
+    "id": "it-068",
+    "group": "clears",
+    "clause": "6.5",
+    "hook": "A real security alert with no promotion in it",
+    "kind": "email",
+    "source": "Transactional email · security alert",
+    "text": "Subject: Security alert: password changed\nYour Sublinear password was changed at 14:03 today. If you made this change, you can ignore this email. If you did not, lock your account immediately from the app or call the number on the back of your card.\nSublinear Financial, 400 Harbor Row. This is a service message about your account."
+  },
+  {
+    "id": "it-287",
+    "group": "flags",
+    "clause": "9.12",
+    "hook": "Three $9,900 payments, same vendor, same day",
+    "kind": "transaction",
+    "source": "AP ledger · March",
+    "text": "TXN 51102 / 51103 / 51104 · 2026-03-03 · $9,900.00 × 3 (same day, same vendor) · Vendor: Halvorsen Print · Category: Collateral · Approver: D. Reyes (manager, limit $10,000) · PO: none · Memo: \"Q2 branch brochures, batches A–C\""
+  },
+  {
+    "id": "it-251",
+    "group": "review",
+    "clause": "4.5",
+    "hook": "'Up to 3% cashback', cap on the next screen",
+    "kind": "ad",
+    "source": "App onboarding · Sublinear Card screen 2 of 4",
+    "text": "Up to 3% cashback on dining and travel with Sublinear Card. Screen 3 of the flow shows the $50 monthly cap, the eligible merchant categories and the monthly payout date."
+  }
+]
